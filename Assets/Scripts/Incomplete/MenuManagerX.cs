@@ -35,8 +35,16 @@ public class MenuManagerX : MonoBehaviour
         DataPersistenceX.sharedInstance.color = colors[colorSelected].GetComponent<Image>().color;
         
         DataPersistenceX.sharedInstance.level = level;
+
+        if (username.text == "" && PlayerPrefs.HasKey("USERNAME_X"))
+        {
+            DataPersistenceX.sharedInstance.username = PlayerPrefs.GetString("USERNAME_X");
+        }
+        else
+        {
+            DataPersistenceX.sharedInstance.username = username.text;
+        }
         
-        DataPersistenceX.sharedInstance.username = username.text;
         
         // Persistencia de datos entre partidas
         DataPersistenceX.sharedInstance.SaveForFutureGames();
@@ -52,7 +60,9 @@ public class MenuManagerX : MonoBehaviour
             level = PlayerPrefs.GetInt("LEVEL_X");
             UpdateLevel();
 
-            username.text = PlayerPrefs.GetString("USERNAME_X");
+            username.placeholder.GetComponent<TextMeshProUGUI>().text =  
+                PlayerPrefs.GetString("USERNAME_X");
+            //username.text = PlayerPrefs.GetString("USERNAME_X");
         }
     }
 

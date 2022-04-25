@@ -28,7 +28,7 @@ public class DataPersistenceX : MonoBehaviour
         else
         {
             // Como ya existe una instancia, destruimos la copia
-            Destroy(this);
+            Destroy(gameObject);
         }
     }
 
