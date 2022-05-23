@@ -32,6 +32,10 @@ public class DataPersistence : MonoBehaviour
         }
     }
 
+    /* Para este ejemplo en concreto, esta función nos viene bien porque todas las variables (clor, nivel y
+     * nombre de usuario) las guardamos y cargamos en el mismo sitio
+     */
+    /*
     public void SaveForFutureGames()
     {
         // Color
@@ -45,5 +49,5 @@ public class DataPersistence : MonoBehaviour
         
         // Nombre de usuario
         PlayerPrefs.SetString("USERNAME", username);
-    }
+    }*/
 }

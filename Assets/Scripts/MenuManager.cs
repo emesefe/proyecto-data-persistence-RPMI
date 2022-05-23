@@ -11,15 +11,15 @@ public class MenuManager : MonoBehaviour
     public TextMeshProUGUI levelText;
     public TMP_InputField username;
 
-    private int level;
+    private int _level;
     private int minLevel = 1;
     private int maxLevel = 10;
 
-    private int colorSelected;
+    private int _colorSelected;
 
     private void Start()
     {
-        level = int.Parse(levelText.text);
+        _level = int.Parse(levelText.text);
         LoadUserOptions();
     }
 
@@ -30,16 +30,32 @@ public class MenuManager : MonoBehaviour
 
     public void SaveUserOptions()
     {
-        // Persistencia de datos entre escenas
-        DataPersistence.sharedInstance.colorSelected = colorSelected;
-        DataPersistence.sharedInstance.color = colors[colorSelected].GetComponent<Image>().color;
+        #region PERSISTENCIA DE DATOS ENTRE ESCENAS
         
-        DataPersistence.sharedInstance.level = level;
+        DataPersistence.sharedInstance.colorSelected = _colorSelected;
+        DataPersistence.sharedInstance.color = colors[_colorSelected].GetComponent<Image>().color;
+        
+        DataPersistence.sharedInstance.level = _level;
         
         DataPersistence.sharedInstance.username = username.text;
+        #endregion
         
-        // Persistencia de datos entre partidas
-        DataPersistence.sharedInstance.SaveForFutureGames();
+        #region PERSISTENCIA DE DATOS ENTRE PARTIDAS
+        
+        // DataPersistence.sharedInstance.SaveForFutureGames();
+        
+        Color color = colors[_colorSelected].GetComponent<Image>().color;
+        PlayerPrefs.SetInt("COLOR_SELECTED", _colorSelected);
+        PlayerPrefs.SetFloat("R", color[0]);
+        PlayerPrefs.SetFloat("G", color[1]);
+        PlayerPrefs.SetFloat("B", color[2]);
+        
+        // Nivel
+        PlayerPrefs.SetInt("LEVEL", _level);
+        
+        // Nombre de usuario
+        PlayerPrefs.SetString("USERNAME", username.text);
+        #endregion
     }
 
     public void LoadUserOptions()
@@ -47,9 +63,9 @@ public class MenuManager : MonoBehaviour
         // Tal y como lo hemos configurado, si tiene esta clave, entonces tiene todas
         if (PlayerPrefs.HasKey("COLOR_SELECTED"))
         {
-            colorSelected = PlayerPrefs.GetInt("COLOR_SELECTED");
+            _colorSelected = PlayerPrefs.GetInt("COLOR_SELECTED");
             
-            level = PlayerPrefs.GetInt("LEVEL");
+            _level = PlayerPrefs.GetInt("LEVEL");
             UpdateLevel();
 
             username.text = PlayerPrefs.GetString("USERNAME");
@@ -60,21 +76,21 @@ public class MenuManager : MonoBehaviour
 
     public void PlusLevel()
     {
-        level++;
-        level = Mathf.Clamp(level, minLevel, maxLevel);
+        _level++;
+        _level = Mathf.Clamp(_level, minLevel, maxLevel);
         UpdateLevel();
     }
 
     public void MinusLevel()
     {
-        level--;
-        level = Mathf.Clamp(level, minLevel, maxLevel);
+        _level--;
+        _level = Mathf.Clamp(_level, minLevel, maxLevel);
         UpdateLevel();
     }
 
     private void UpdateLevel()
     {
-        levelText.text = level.ToString();
+        levelText.text = _level.ToString();
     }
     #endregion
 
@@ -84,13 +100,13 @@ public class MenuManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.RightArrow))
         {
-            colorSelected++;
+            _colorSelected++;
         }else if (Input.GetKeyDown(KeyCode.LeftArrow))
         {
-            colorSelected--;
+            _colorSelected--;
         }
 
-        colorSelected %= 3;
+        _colorSelected %= 3;
         ChangeColorSelection();
     }
 
@@ -98,7 +114,7 @@ public class MenuManager : MonoBehaviour
     {
         for (int i = 0; i < colors.Length; i++)
         {
-            colors[i].transform.GetChild(0).gameObject.SetActive(i == colorSelected);
+            colors[i].transform.GetChild(0).gameObject.SetActive(i == _colorSelected);
         }
     }
 
